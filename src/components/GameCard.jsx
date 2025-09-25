@@ -1,28 +1,60 @@
+import "./GameCard.css";
+
 export default function GameCard({ game }) {
+  const getMetacriticClass = (score) => {
+    if (!score) return "";
+    if (score >= 75) return "metacritic-high";
+    if (score >= 50) return "metacritic-medium";
+    return "metacritic-low";
+  };
+
+  const formatDate = (dateString) => {
+    if (!dateString) return "Data não informada";
+    return new Date(dateString).toLocaleDateString('pt-BR');
+  };
+
+  const getPlaystationPlatform = () => {
+    const psPlatform = game.platforms?.find(p => 
+      p.platform.name.toLowerCase().includes("playstation")
+    );
+    return psPlatform?.platform.name || "PlayStation";
+  };
+
   return (
-    <li className="p-4 rounded-xl shadow bg-white hover:shadow-lg transition w-72">
-      <h2 className="text-lg font-bold text-gray-900">{game.name}</h2>
+    <li className="game-card">
+      <h2>{game.name}</h2>
 
       {game.background_image ? (
-        <img
-          src={game.background_image}
-          alt={game.name}
-          className="rounded-lg mt-2 w-full h-40 object-cover"
-        />
+        <img src={game.background_image} alt={game.name} />
       ) : (
-        <div className="mt-2 w-full h-40 bg-gray-300 flex items-center justify-center text-gray-600 text-sm rounded-lg">
-          Sem imagem
+        <div className="placeholder">
+          <div className="placeholder-icon">🎮</div>
+          Sem imagem disponível
         </div>
       )}
 
-      <p className="text-sm text-gray-700 mt-2">
-        🎮 <span className="font-medium">Lançamento:</span>{" "}
-        {game.released || "Data não informada"}
-      </p>
+      <div className="game-info">
+        <div className="info-item">
+          <span className="info-icon">📅</span>
+          <strong>Lançamento:</strong> {formatDate(game.released)}
+        </div>
+        
+        <div className="info-item">
+          <span className="info-icon">⭐</span>
+          <strong>Metacritic:</strong> 
+          {game.metacritic ? (
+            <span className={`metacritic-score ${getMetacriticClass(game.metacritic)}`}>
+              {game.metacritic}
+            </span>
+          ) : (
+            "N/A"
+          )}
+        </div>
+      </div>
 
-      <p className="text-sm text-gray-700 mt-1">
-        Nota Metacritic: {game.metacritic ?? "N/A"}
-      </p>
+      <div className="platform-badge">
+        {getPlaystationPlatform()}
+      </div>
     </li>
   );
 }
