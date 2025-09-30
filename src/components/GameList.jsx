@@ -1,5 +1,5 @@
 import GameCard from "./GameCard";
-import "./GameList.css";
+
 
 export default function GameList({ games, searchTerm = "" }) {
   const filteredGames = games.filter(game =>
